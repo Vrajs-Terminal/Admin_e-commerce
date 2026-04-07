@@ -13,6 +13,7 @@ const Table = ({
   pageSize = 10,
   selectable = false,
   onSelectRows,
+  rowClassName,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [sortConfig, setSortConfig] = useState(null);
@@ -53,6 +54,10 @@ const Table = ({
     } else {
       setSelectedRows(new Set(paginatedData.map((_, i) => startIndex + i)));
     }
+
+    const nextSelectedIndexes =
+      selectedRows.size === paginatedData.length ? [] : paginatedData.map((_, i) => startIndex + i);
+    onSelectRows?.(nextSelectedIndexes.map((index) => sortedData[index]));
   };
 
   const handleSelectRow = (index) => {
@@ -63,7 +68,7 @@ const Table = ({
       newSelected.add(index);
     }
     setSelectedRows(newSelected);
-    onSelectRows?.(Array.from(newSelected));
+    onSelectRows?.(Array.from(newSelected).map((rowIndex) => sortedData[rowIndex]));
   };
 
   if (isLoading) {
@@ -144,7 +149,7 @@ const Table = ({
               <tr
                 key={index}
                 onClick={() => onRowClick?.(row, index)}
-                className="border-b border-surface-200 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors group cursor-pointer"
+                className={`border-b border-surface-200 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors group cursor-pointer ${typeof rowClassName === 'function' ? rowClassName(row, index) : rowClassName || ''}`}
               >
                 {selectable && (
                   <td className="px-6 py-4">

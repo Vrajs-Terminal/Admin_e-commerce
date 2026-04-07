@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { LayoutProvider } from './context/LayoutContext';
 import Layout from './components/layout/Layout';
@@ -12,6 +12,15 @@ import RequestRestockList from './pages/product/RequestRestockList';
 import ProductGallery from './pages/product/ProductGallery';
 import BannerSetup from './pages/product/BannerSetup';
 import ProductAttributes from './pages/ProductAttributes';
+import OffersAndDeals from './pages/offers/OffersAndDeals';
+import Coupon from './pages/offers/Coupon';
+import FlashDeals from './pages/offers/FlashDeals';
+import DealOfTheDay from './pages/offers/DealOfTheDay';
+import FeaturedDeal from './pages/offers/FeaturedDeal';
+import ClearanceSale from './pages/offers/ClearanceSale';
+import Notifications from './pages/notifications/Notifications';
+import SendNotification from './pages/notifications/SendNotification';
+import PushNotificationsSetup from './pages/notifications/PushNotificationsSetup';
 import Categories from './pages/categories/Categories';
 import SubCategories from './pages/categories/SubCategories';
 import AllOrders from './pages/orders/AllOrders';
@@ -35,10 +44,13 @@ import RefundRefunded from './pages/refund/RefundRefunded';
 import RefundRejected from './pages/refund/RefundRejected';
 
 const App = () => {
+  const Router = import.meta.env.PROD ? HashRouter : BrowserRouter;
+  const routerProps = import.meta.env.PROD ? {} : { basename: import.meta.env.BASE_URL };
+
   return (
     <ThemeProvider>
       <LayoutProvider>
-        <BrowserRouter>
+        <Router {...routerProps}>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Dashboard />} />
@@ -50,6 +62,15 @@ const App = () => {
               <Route path="products/gallery" element={<ProductGallery />} />
               <Route path="products/banner-setup" element={<BannerSetup />} />
               <Route path="product-attributes" element={<ProductAttributes />} />
+              <Route path="modules/offers-and-deals" element={<OffersAndDeals />} />
+              <Route path="modules/coupon" element={<Coupon />} />
+              <Route path="modules/flash-deals" element={<FlashDeals />} />
+              <Route path="modules/deal-of-the-day" element={<DealOfTheDay />} />
+              <Route path="modules/featured-deal" element={<FeaturedDeal />} />
+              <Route path="modules/clearance-sale" element={<ClearanceSale />} />
+              <Route path="modules/notifications" element={<Notifications />} />
+              <Route path="modules/send-notification" element={<SendNotification />} />
+              <Route path="modules/push-notifications-setup" element={<PushNotificationsSetup />} />
               <Route path="categories" element={<Categories />} />
               <Route path="categories/sub-categories" element={<SubCategories />} />
               <Route path="orders" element={<AllOrders />} />
@@ -73,7 +94,7 @@ const App = () => {
               <Route path="modules/:moduleSlug" element={<ModulePage />} />
             </Route>
           </Routes>
-        </BrowserRouter>
+        </Router>
       </LayoutProvider>
     </ThemeProvider>
   );
