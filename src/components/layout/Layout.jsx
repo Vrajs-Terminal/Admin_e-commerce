@@ -29,7 +29,7 @@ const Layout = () => {
 
           {/* Footer */}
           <footer className="w-full p-6 text-center text-xs text-surface-500 border-t border-surface-200 dark:border-surface-800 bg-white dark:bg-surface-900 flex-shrink-0">
-            &copy; {new Date().getFullYear()} FitFloor Admin Panel. All Rights Reserved.
+            &copy; {new Date().getFullYear()} RoyalVirtus Admin Panel. All Rights Reserved.
           </footer>
         </main>
       </div>

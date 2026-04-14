@@ -8,7 +8,7 @@ const defaultForm = {
   category: 'Fitness',
   subCategory: 'Yoga',
   unit: 'kg',
-  brand: 'FitFloor',
+  brand: 'RoyalVirtus',
   shortDescription: '',
   description: '',
   listPrice: '',

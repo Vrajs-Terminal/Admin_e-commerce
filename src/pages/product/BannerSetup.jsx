@@ -31,7 +31,7 @@ import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Table from '../../components/ui/Table';
 
-const storageKey = 'fitfloor.banner-setup.v2';
+const storageKey = 'royalvirtus.banner-setup.v2';
 
 const seedBanners = [
   {

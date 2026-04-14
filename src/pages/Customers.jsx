@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
-  Users, 
   Search, 
   Filter, 
   ChevronRight, 
   Mail, 
-  Phone, 
-  UserPlus
+   Phone
 } from 'lucide-react';
 
 const customers = [
@@ -18,6 +16,32 @@ const customers = [
 ];
 
 const Customers = () => {
+   const [searchQuery, setSearchQuery] = useState('');
+   const [statusFilter, setStatusFilter] = useState('All');
+   const [cityFilter, setCityFilter] = useState('All');
+
+   const cityOptions = useMemo(() => ['All', ...new Set(customers.map((customer) => customer.city))], []);
+
+   const filteredCustomers = useMemo(() => {
+      const query = searchQuery.trim().toLowerCase();
+      return customers.filter((customer) => {
+         const matchesSearch =
+            !query ||
+            customer.name.toLowerCase().includes(query) ||
+            customer.email.toLowerCase().includes(query) ||
+            customer.phone.toLowerCase().includes(query);
+         const matchesStatus = statusFilter === 'All' || customer.status === statusFilter;
+         const matchesCity = cityFilter === 'All' || customer.city === cityFilter;
+         return matchesSearch && matchesStatus && matchesCity;
+      });
+   }, [searchQuery, statusFilter, cityFilter]);
+
+   const resetFilters = () => {
+      setSearchQuery('');
+      setStatusFilter('All');
+      setCityFilter('All');
+   };
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto transition-all duration-300">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
@@ -29,22 +53,42 @@ const Customers = () => {
             Easily find, manage, and segment your entire customer base.
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 px-6 py-3.5 bg-primary-600 text-white rounded-xl shadow-lg shadow-primary-500/30 hover:bg-primary-700 transition-all font-bold active:scale-95 text-sm">
-          <UserPlus size={20} />
-          <span>New Customer</span>
-        </button>
       </div>
 
       <div className="bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-3xl shadow-card p-4 sm:p-6 overflow-hidden transition-all duration-300">
         <div className="flex flex-col xl:flex-row items-center gap-4 mb-8">
            <div className="relative flex-1 w-full group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400 group-focus-within:text-primary-500 transition-colors" />
-              <input type="text" placeholder="Search customer by name or email..." className="w-full pl-10 pr-4 py-3 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 font-bold transition-all text-sm dark:text-white" />
+                     <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder="Search customer by name, email, or phone..."
+                        className="w-full pl-10 pr-4 py-3 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 font-bold transition-all text-sm dark:text-white"
+                     />
            </div>
            <div className="flex items-center gap-3 w-full xl:w-auto">
-              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-2xl text-xs font-black uppercase tracking-widest text-surface-600 dark:text-surface-300 hover:bg-surface-50 transition-all">
+                     <select
+                        value={statusFilter}
+                        onChange={(event) => setStatusFilter(event.target.value)}
+                        className="flex-1 sm:flex-none px-4 py-3 border border-surface-200 dark:border-surface-700 rounded-2xl text-xs font-black uppercase tracking-widest text-surface-600 dark:text-surface-300 bg-white dark:bg-surface-900"
+                     >
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                     </select>
+                     <select
+                        value={cityFilter}
+                        onChange={(event) => setCityFilter(event.target.value)}
+                        className="flex-1 sm:flex-none px-4 py-3 border border-surface-200 dark:border-surface-700 rounded-2xl text-xs font-black uppercase tracking-widest text-surface-600 dark:text-surface-300 bg-white dark:bg-surface-900"
+                     >
+                        {cityOptions.map((city) => (
+                           <option key={city}>{city}</option>
+                        ))}
+                     </select>
+                     <button onClick={resetFilters} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-2xl text-xs font-black uppercase tracking-widest text-surface-600 dark:text-surface-300 hover:bg-surface-50 transition-all">
                 <Filter size={18} className="text-primary-500" />
-                <span>Filters</span>
+                        <span>Reset</span>
               </button>
               <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-2xl text-xs font-black uppercase tracking-widest text-surface-600 dark:text-surface-300 hover:text-primary-600 transition-all">
                  Export All
@@ -54,7 +98,7 @@ const Customers = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[800px]">
             <tbody className="divide-y divide-surface-50 dark:divide-surface-700/50">
-               {customers.map((c, i) => (
+               {filteredCustomers.map((c, i) => (
                   <tr key={i} className="group hover:bg-surface-25 dark:hover:bg-surface-900/30 transition-all cursor-pointer">
                     <td className="py-6 px-4 first:pl-2">
                        <div className="flex items-center gap-4">
@@ -98,6 +142,13 @@ const Customers = () => {
                     </td>
                   </tr>
                ))}
+                      {filteredCustomers.length === 0 && (
+                         <tr>
+                            <td colSpan={5} className="py-14 px-6 text-center text-sm text-surface-500 dark:text-surface-400">
+                               No customers match the current filters.
+                            </td>
+                         </tr>
+                      )}
             </tbody>
           </table>
         </div>

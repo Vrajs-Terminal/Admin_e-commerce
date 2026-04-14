@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Store, LogOut, X, ChevronDown } from 'lucide-react';
 import { useLayout } from '../../context/LayoutContext';
 import { sidebarSections } from '../../constants/navigation';
@@ -10,6 +10,8 @@ const Sidebar = () => {
   const [openDropdowns, setOpenDropdowns] = useState(() => ({
     orders: location.pathname.startsWith('/orders'),
   }));
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname.startsWith('/orders')) {
@@ -23,6 +25,10 @@ const Sidebar = () => {
 
   const isDropdownActive = (submenu) => {
     return submenu.some(item => location.pathname === item.path);
+  };
+
+  const handleLogout = () => {
+    navigate('/login');
   };
 
   return (
@@ -52,7 +58,7 @@ const Sidebar = () => {
               <Store className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl tracking-tight text-surface-900 dark:text-white whitespace-nowrap">
-              Fit<span className="text-primary-600">Floor</span>
+              Royal<span className="text-primary-600">Virtus</span>
             </span>
           </div>
 
@@ -183,7 +189,7 @@ const Sidebar = () => {
 
         {/* Footer */}
         <div className="p-4 border-t border-surface-200 dark:border-surface-800 flex-shrink-0">
-          <button className="flex items-center gap-3 w-full px-3 py-3 text-[13px] text-surface-600 dark:text-surface-400 hover:text-red-500 transition-colors group overflow-hidden">
+          <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-3 text-[13px] text-surface-600 dark:text-surface-400 hover:text-red-500 transition-colors group overflow-hidden">
             <LogOut size={20} className="flex-shrink-0 group-hover:-translate-x-1 transition-transform" />
             <span className={`transition-all duration-300 ${isCollapsed ? 'lg:opacity-0 lg:translate-x-[-10px]' : 'opacity-100 translate-x-0'}`}>
               Logout

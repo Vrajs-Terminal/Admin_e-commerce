@@ -126,7 +126,7 @@ const Dashboard = () => {
             Dashboard <span className="text-primary-600">Overview</span>
           </h1>
           <p className="text-sm sm:text-base text-surface-500 max-w-md">
-            Welcome back, Viren! Monitor your store's health at a glance.
+            Welcome back, Viren! Monitor your RoyalVirtus health at a glance.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto animate-fade-in group">
